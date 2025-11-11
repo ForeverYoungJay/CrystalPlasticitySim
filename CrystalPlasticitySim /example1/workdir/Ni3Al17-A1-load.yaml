@@ -1,0 +1,19 @@
+---
+# Mixed (deformation–stress) conditions are possible, denote with x, not unknown
+
+solver:
+  mechanical: spectral_basic
+
+loadstep:
+  - boundary_conditions:
+      mechanical:
+        dot_F: [[8.3e-4, x, x],
+                [0,      x,  0],
+                [0,      x, x]]
+        P: [[x, 0, 0],
+            [x, 0, x],
+            [x, 0, 0]]
+    discretization:
+      t: 700
+      N: 7000
+    f_out: 200
