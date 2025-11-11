@@ -1,10 +1,22 @@
+Here’s a drop-in `README.md` for **CrystalPlasticitySim** that you can paste into your repository.
+
+
+
 ---
+
+
 
 # CrystalPlasticitySim
 
+
+
 *A multi-agent system that automates crystal plasticity workflows with DAMASK 3.0—covering input generation, simulation runs, post-processing, and parameter/boundary-condition optimization.*
 
-> This repository accompanies the  **“AI Agents for automating materials research: a case study of crystal plasticity simulations”** by **Jiyi Yang, Yoshinao Kobayashi, and Masahiko Demura (NIMS)**. The paper details the architecture, prompts, and case studies (Ni₃Al single crystal). See the **Citation** section below. 
+
+
+> This repository accompanies the manuscript **“AI Agents for automating materials research: a case study of crystal plasticity simulations”** by **Jiyi Yang, Yoshinao Kobayashi, and Masahiko Demura (NIMS)**. The paper details the architecture, prompts, and case studies (Ni₃Al single crystal). See the **Citation** section below. 
+
+
 
 ---
 
