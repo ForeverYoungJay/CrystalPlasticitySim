@@ -25,8 +25,8 @@ from datetime import datetime
 
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_ENDPOINT"] = "https://api.smith.langchain.com"
-os.environ["LANGCHAIN_API_KEY"] = "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" 
-os.environ["LANGCHAIN_PROJECT"] = "damask_agent_v9" 
+os.environ["LANGCHAIN_API_KEY"] = "" 
+os.environ["LANGCHAIN_PROJECT"] = "" 
 
 
 
@@ -84,7 +84,7 @@ llm = ChatOpenAI(
     max_tokens=None,
     timeout=None,
     max_retries=40,
-    api_key="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",
+    api_key="",
     verbose=True,
 )
 
