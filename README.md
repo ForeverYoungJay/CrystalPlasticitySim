@@ -1,93 +1,114 @@
 
+---
 
+# 🧠 CrystalPlasticitySim
+
+*A multi-agent framework for automating DAMASK-based crystal plasticity simulations*
 
 ---
 
+## 📖 Overview
 
+**CrystalPlasticitySim** is a modular **multi-agent system** that automates the full workflow of crystal plasticity simulations — from **YAML input generation** to **simulation execution**, **post-processing**, and **parameter or boundary-condition optimization**.
 
-# CrystalPlasticitySim
+It integrates the **DAMASK 3.0** solver with **AI-driven agents** built on LangGraph and OpenAI models, enabling high-level natural-language tasking such as:
 
-
-
-*A multi-agent system that automates crystal plasticity workflows with DAMASK 3.0—covering input generation, simulation runs, post-processing, and parameter/boundary-condition optimization.*
-
-
-
-> This repository accompanies the manuscript **“AI Agents for automating materials research: a case study of crystal plasticity simulations”** by **Jiyi Yang, Yoshinao Kobayashi, and Masahiko Demura (NIMS)**. The paper details the architecture, prompts, and case studies (Ni₃Al single crystal). See the **Citation** section below. 
-
-
+> “Optimize the slip parameters for Ni₃Al to match this stress–strain curve.”
+> “Find the deformation gradient tensor that aligns with this target quaternion.”
+> “Re-run the DAMASK simulation with 0.1% strain step and plot the results.”
 
 ---
 
-## Highlights
+## 🧩 Architecture
 
-* **End-to-end automation** of DAMASK 3.0 simulations: pre-processing → execution → post-processing.
-* **Three collaborating agents** (Supervisor, Simulation, Computational Assistant) orchestrated with LangGraph.
-* **Turn-key optimizers** for:
+The system consists of **three autonomous agents**, coordinated by a Supervisor:
 
-  * **Slip-related parameter calibration** (e.g., initial CRSS, saturation stress, hardening modulus).
-  * **Boundary-condition fitting** (e.g., shear components of the deformation gradient to match a target quaternion).
-* **Reproducibility by design:** versioned scripts, logged runs, deterministic file naming, and structured outputs.
+| Agent                   | Role                      | Description                                                                               |
+| ----------------------- | ------------------------- | ----------------------------------------------------------------------------------------- |
+| 🧭 **Supervisor Agent** | Task routing              | Interprets user intent, decides which agent should act next, and terminates the workflow. |
+| ⚙️ **Simulation Agent** | Domain expertise          | Specializes in **DAMASK simulations**, handling YAML edits, runs, and result parsing.     |
+| 💻 **Code Agent**       | Programming & environment | Handles **Python environment setup**, package installation, and script generation/repair. |
 
-> Architecture overview is shown in **Figure 1** (p. 6), with a full workflow trace in **Figure 7** (p. 33). Case-study results include stress–strain fitting (**Figure 3**, p. 31) and orientation-matching convergence (**Figures 5–6**, pp. 32–33). Tables of tuned parameters and optimized gradients are in **Tables 6–7** (pp. 31–32). 
+They communicate through a **LangGraph** workflow managed by a **Supervisor LLM**, ensuring reasoning transparency and recoverability.
 
 ---
 
-## Repository layout
+## 📁 Repository Structure
 
 ```
 CrystalPlasticitySim/
-├─ prompt.py                    # Role prompts & templates for all agents
-├─ crystalplasticity/
-│  ├─ damask_yaml.py            # Edit/validate DAMASK YAML (materials, loads)
-│  ├─ damask_simulation.py      # Thin wrapper to run DAMASK and capture logs
-│  ├─ damask_results.py         # Parse .hdf5 outputs, compute metrics
-│  └─ utils.py                  # Common helpers (pathing, logging, I/O)
+├─ app/
+│  ├─ config.py              # Environment setup (API keys, model names)
+│  ├─ tools.py               # Python REPL + File toolkit
+│  ├─ graph.py               # LangGraph definition
+│  └─ cli.py                 # Entry point for local execution
+│
 ├─ agents/
-│  ├─ supervisor.py             # Task decomposition, orchestration, termination
-│  ├─ simulation_agent.py       # Pre/Run/Post with DAMASK tools
-│  └─ computation_agent.py          # Env setup, script generation, debugging
+│  ├─ supervisor.py          # Supervisor node (Router)
+│  ├─ simulation_agent.py    # DAMASK domain agent
+│  └─ code_agent.py          # Python/Environment agent
+│
+├─ crystalplasticity/
+│  ├─ damask_yaml.py         # Read/edit DAMASK input YAML
+│  ├─ damask_simulation.py   # Execute and monitor DAMASK runs
+│  └─ damask_results.py      # Post-processing and metric evaluation
+│
 ├─ workflows/
-│  ├─ optimize_parameters.py    # Case #1 (slip parameters)
-│  └─ optimize_boundary.py      # Case #2 (F12, F13, F23 to match quaternion)
-├─ examples/
-│  └─ workdir/                  # Example inputs & experimental data
-├─ requirements.txt             # Python dependencies
-├─ README.md
-└─ LICENSE
+│  ├─ optimize_parameters.py # Case 1: Slip parameter optimization
+│  └─ optimize_boundary.py   # Case 2: Boundary tensor optimization
+│
+├─ prompt.py                 # Centralized system & agent prompts
+├─ examples/workdir/         # Example input files and experimental data
+├─ requirements.txt
+├─ LICENSE
+└─ README.md
 ```
 
-> The paper explicitly mentions `prompt.py` and a DAMASK-focused tools trio (`damask_yaml.py`, `damask_simulation.py`, `damask_results.py`). 
-
 ---
 
-## Prerequisites
+## ⚙️ Installation
 
-* **Python** ≥ 3.10
-* **DAMASK 3.0** installed and available on `PATH` (e.g., `damask_grid`). 
-* A UNIX-like shell (Linux/macOS) recommended
-* (Optional) **conda** or **venv** for isolation
-* GPU not required; CPU is fine (runtime depends on model/mesh size)
-
----
-
-## Install
+### 1️⃣ Clone and enter the repository
 
 ```bash
-# 1) clone
 git clone https://github.com/ForeverYoungJay/CrystalPlasticitySim.git
 cd CrystalPlasticitySim
+```
 
-# 2) create environment (example with venv)
+### 2️⃣ Create an environment
+
+```bash
 python -m venv .venv
 source .venv/bin/activate
-
-# 3) install python deps
-pip install -r requirements.txt
-
-# 4) verify DAMASK (should return usage/help)
-DAMASK_grid --help
 ```
+
+### 3️⃣ Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4️⃣ Set API keys (via environment variables)
+
+```bash
+export OPENAI_API_KEY="sk-xxxx"
+export LANGCHAIN_API_KEY="lsv2_xxxx"
+export LANGCHAIN_PROJECT="crystalplasticity"
+```
+
+---
+
+## 🚀 Running the Multi-Agent Workflow
+
+To launch the multi-agent simulation loop:
+
+```bash
+python -m app.cli "Optimize Ni3Al slip parameters based on the provided stress-strain curve."
+```
+
+Each iteration of the LangGraph is streamed to the console, showing reasoning traces and agent outputs.
+
+> 💡 You can modify `OPENAI_MODEL` or `LANGSMITH_PROJECT` in `app/config.py`.
 
 ---
 
