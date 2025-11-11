@@ -46,13 +46,12 @@ CrystalPlasticitySim/
 ├─ agents/
 │  ├─ supervisor.py             # Task decomposition, orchestration, termination
 │  ├─ simulation_agent.py       # Pre/Run/Post with DAMASK tools
-│  └─ compute_agent.py          # Env setup, script generation, debugging
+│  └─ computation_agent.py          # Env setup, script generation, debugging
 ├─ workflows/
 │  ├─ optimize_parameters.py    # Case #1 (slip parameters)
 │  └─ optimize_boundary.py      # Case #2 (F12, F13, F23 to match quaternion)
 ├─ examples/
-│  ├─ workdir/                  # Example inputs & experimental data
-│  └─ notebooks/                # Optional demo notebooks
+│  └─ workdir/                  # Example inputs & experimental data
 ├─ requirements.txt             # Python dependencies
 ├─ README.md
 └─ LICENSE
