@@ -1,4 +1,3 @@
-Here’s a drop-in `README.md` for **CrystalPlasticitySim** that you can paste into your repository.
 
 
 
